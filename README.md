@@ -1,108 +1,65 @@
 # PGH Gaming Hub — C2C Marketplace & Real-Time Trading Platform
 
-> **Technical Architecture, AI Vision Pipeline & System Design Case Study**
+> **Product Showcase, AI Vision Pipeline & System Overview**
 
-[![Live Demo](https://img.shields.io/badge/Live_App-pgh--gaming--hub.vercel.app-000000?style=for-the-badge&logo=vercel)](https://pgh-gaming-hub.vercel.app/)
+[![Live Application](https://img.shields.io/badge/Live_App-pgh--gaming--hub.vercel.app-000000?style=for-the-badge&logo=vercel)](https://pgh-gaming-hub.vercel.app/)
 [![Next.js](https://img.shields.io/badge/Next.js-16_App_Router-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Realtime_%26_Postgres-3ECF8E?style=for-the-badge&logo=supabase)](https://supabase.com/)
 [![Google Gemini](https://img.shields.io/badge/Google_GenAI-Vision_%26_Moderation-8E75C4?style=for-the-badge&logo=google)](https://ai.google.dev/)
 
 🌐 **Live Application:** [https://pgh-gaming-hub.vercel.app/](https://pgh-gaming-hub.vercel.app/)  
-👨‍💻 **Architect & Engineer:** [Farhan Pathan](https://github.com/Farhanpathan12)
+👨‍💻 **Architect & Developer:** [Farhan Pathan](https://github.com/Farhanpathan12)
 
 ---
 
 > [!NOTE]
-> **Product Prototype & System Design Case Study**  
-> PGH Gaming Hub is a full-stack C2C gaming gear marketplace platform. This repository documents the **Technical Architecture, Computer Vision Pipeline, and System Design** for portfolio and technical review. Proprietary application source files, internal microservices, and production secrets remain strictly private.
+> **Product Prototype & Portfolio Showcase**  
+> PGH Gaming Hub is a full-stack C2C gaming gear marketplace platform. This repository documents the **Technical Architecture, AI Pipelines, and System Design** for portfolio and recruiter review. The production application source files and backend secrets remain private.
 
 ---
 
-## 📌 Executive Summary
+## 📌 Product Overview
 
-Trading second-hand gaming hardware (consoles, GPUs, high-refresh displays) on general classified sites suffers from severe trust deficits: buyers struggle to verify hardware condition, sellers face endless haggling spam, and pricing pre-owned gear is largely guesswork.
+Trading pre-owned gaming gear (consoles, GPUs, high-refresh displays) on traditional classified sites suffers from major trust deficits: buyers struggle to verify hardware condition, sellers face non-stop lowball offers, and pricing second-hand tech is largely guesswork.
 
-**PGH Gaming Hub** solves these pain points by integrating **AI Computer Vision (Google Gemini)** for automated hardware box inspection, **Supabase Realtime** for instant buyer-seller negotiations with formal counter-offer acceptance, and dynamic gear valuation algorithms.
-
----
-
-## 🏗️ High-Level System Architecture
-
-```mermaid
-flowchart TD
-    subgraph ClientLayer [Next.js 16 Web Client]
-        MarketplaceFeed[Marketplace Catalog & Discovery]
-        ListingWizard[Listing Creation & Vision Scan]
-        NegotiationRoom[Real-Time Chat & Counter-Offers]
-        ValuationTool[Dynamic Valuation Wizard]
-    end
-
-    subgraph BackendAPI [Next.js Server Actions & Route Handlers]
-        VisionRoute[/api/listings/analyze-hardware]
-        ModerateRoute[/api/moderate]
-        PricingRoute[/api/pricing/evaluate]
-    end
-
-    subgraph AIServices [Google AI Studio / GenAI]
-        GeminiVision[Google Gemini 2.5 / Gemma Vision OCR]
-        GeminiSafety[Gemini Text Content Moderation]
-    end
-
-    subgraph DataLayer [Supabase Cloud Infrastructure]
-        Postgres[(PostgreSQL Relational DB)]
-        RealtimePubSub[Supabase Realtime WebSocket Channels]
-        StorageBuckets[Product Media Storage Buckets]
-        RLSPolicies[Row Level Security Engine]
-    end
-
-    ListingWizard -->|Upload packaging photo| VisionRoute
-    VisionRoute -->|Analyze specs, serials, condition| GeminiVision
-    GeminiVision -->|Structured JSON specs| ListingWizard
-
-    NegotiationRoom -->|Send message / offer| ModerateRoute
-    ModerateRoute -->|Check scam/UPI/abusive content| GeminiSafety
-    ModerateRoute -->|Safe message pass-through| RealtimePubSub
-
-    NegotiationRoom <-->|Bi-directional negotiation sync| RealtimePubSub
-    RealtimePubSub <--> Postgres
-
-    MarketplaceFeed -->|Fetch verified listings| RLSPolicies
-    RLSPolicies --> Postgres
-    MarketplaceFeed -->|Fetch CDN assets| StorageBuckets
-```
+**PGH Gaming Hub** solves these pain points through:
+1. **AI Computer Vision (Google Gemini):** Automated hardware box inspection to detect accurate model SKUs and specifications directly from photos.
+2. **Real-Time Negotiation Engine:** Direct in-app negotiation rooms with binding offer and counter-offer acceptance flows on Supabase Realtime.
+3. **Automated AI Safety & Moderation:** Real-time message inspection intercepting spam, scam links, and abusive messages.
+4. **Dynamic Valuation & Benchmarks:** Multi-step valuation estimator and FPS benchmark estimators for listed hardware.
 
 ---
 
-## ⚙️ Core Technical Highlights
+## ✨ Core Features & Functionality
 
-### 1. AI Hardware Box Scan & Vision Pipeline
-- **Automated Specs Extraction:** When a seller uploads photos of hardware packaging, the `/api/listings/analyze-hardware` endpoint streams image payloads to Google Gemini vision models.
-- **Structured Schema Detection:** The model extracts manufacturer, exact model SKU (e.g., *PS5 Disc Edition CFI-1200*, *RTX 4070 12GB*), cosmetic state, and storage capacity, automatically populating the listing form to prevent misleading listings.
+### 1. AI Hardware Box Scan & Inspection
+- **Automated Specs Detection:** Sellers upload packaging photos to the vision endpoint, which leverages Google Gemini vision models to automatically detect manufacturer, model name, storage capacity, and hardware condition.
+- **Accurate Cataloging:** Prevents inaccurate or misleading listings by pre-filling verified specifications.
 
-### 2. Real-Time Negotiation & Offer State Machine
-- **WebSocket Synchronization:** Negotiation rooms leverage Supabase Realtime pub/sub channels for instantaneous message delivery.
-- **Formal Offer Workflow:** Buyers submit binding monetary offers; sellers can formally `Accept`, `Counter`, or `Decline`, triggering atomic database updates and state transitions.
+### 2. Real-Time Chat & Negotiation State Machine
+- **Instant Messaging:** Direct buyer-seller communication channels powered by Supabase Realtime WebSockets.
+- **Formal Counter-Offers:** Structured workflow allowing buyers to propose prices and sellers to formally `Accept`, `Counter`, or `Decline` offers with atomic state transitions.
 
-### 3. Automated AI Chat Moderation & Scam Prevention
+### 3. Automated AI Chat Moderation
 - **Real-Time Guardrails:** Outgoing negotiation messages are inspected by a dedicated Gemini safety route (`/api/moderate`).
 - **Scam Interception:** Detects unauthorized third-party payment requests, fraudulent external URLs, and toxic language, alerting users before high-risk off-platform trades occur.
 
-### 4. Dynamic Gear Valuation & FPS Benchmarks
-- **Algorithmic Pricing Wizard:** Calculates fair market value factoring hardware category, device age, cosmetic scratches, and fan noise/defects.
-- **Hardware Performance Estimator:** Built-in benchmark lookup engine (see [`architecture/benchmarks.ts`](architecture/benchmarks.ts)) displaying expected target resolutions and frame rates on listed GPUs and consoles across major titles.
+### 4. Valuation Wizard & Gaming Benchmarks
+- **Pricing Estimation Engine:** Evaluates gear categories (PS5, Switch, GPUs, Monitors) factoring device age, cosmetic wear, and fan noise to recommend fair market price ranges.
+- **FPS Performance Estimator:** Built-in gaming benchmark engine displaying expected resolutions and frame rates on listed gaming hardware across popular titles.
 
 ---
 
 ## 🛠️ Complete Tech Stack
 
-| Layer | Technologies |
+| Layer | Technologies Used |
 | :--- | :--- |
 | **Frontend Framework** | Next.js 16 (App Router), React 19, TypeScript |
 | **Styling & Motion** | Tailwind CSS v4, Framer Motion, Lucide React, Sonner |
 | **Backend & Realtime** | Supabase (PostgreSQL, Realtime WebSockets, Storage, RLS) |
 | **AI & Computer Vision** | Google AI Studio (`@google/genai` — Gemini / Gemma) |
-| **Geolocation** | Leaflet, React-Leaflet |
+| **Geolocation & Maps** | Leaflet, React-Leaflet |
 | **Data Validation** | Zod |
 | **Hosting & Deployment** | Vercel Serverless Edge Network |
 
